@@ -19,7 +19,8 @@ const Login = () => {
       dispatch(addUser(res.data));
       navigate("/feed");
     } catch (err) {
-      console.log("ERROR ", err.message);
+      navigate("/login");
+      console.error(err);
     }
   };
 
