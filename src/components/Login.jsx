@@ -5,6 +5,7 @@ import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router";
 
 const Login = () => {
+  const [error, setError] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const Login = () => {
       navigate("/feed");
     } catch (err) {
       navigate("/login");
-      console.error(err);
+      setError(err?.response?.data || "something went wrong");
     }
   };
 
@@ -53,7 +54,7 @@ const Login = () => {
               />
             </fieldset>
           </div>
-
+          <p className="text-red-500">{error}</p>
           <div className="card-actions justify-center">
             <button className="btn btn-primary" onClick={handleLoginClick}>
               Login
