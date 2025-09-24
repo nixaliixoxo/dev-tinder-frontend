@@ -29,7 +29,7 @@ const Feed = () => {
   return (
     <div>
       {feed && feed.length > 0 ? (
-        <UserCard userFeed={feed[0]} />
+        <UserCard user={feed[0]} />
       ) : (
         <p>Loading feed...</p>
       )}

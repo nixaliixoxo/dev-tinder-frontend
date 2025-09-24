@@ -1,7 +1,7 @@
 import React from 'react'
 
-const UserCard = ({userFeed}) => {
-    const {firstName, lastName, photoURL, about} = userFeed;
+const UserCard = ({user}) => {
+    const {firstName, lastName, photoURL, about} = user;
   return (
     <div className="flex justify-center p-3">
   <div className="card bg-amber-50 w-72 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-xl">
@@ -34,7 +34,6 @@ const UserCard = ({userFeed}) => {
     </div>
   </div>
 </div>
-
   )
 }
 
