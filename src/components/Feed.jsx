@@ -26,6 +26,9 @@ const Feed = () => {
     console.log(feed);
   }, []);
 
+  if(!feed) return;
+  if(feed.length === 0) return <h1>No More Users to show</h1>;
+
   return (
     <div>
       {feed && feed.length > 0 ? (

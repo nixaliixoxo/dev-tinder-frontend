@@ -1,7 +1,27 @@
+import axios from 'axios';
 import React from 'react'
+import { useDispatch } from 'react-redux';
+import { removeUserFromFeed } from '../utils/feedSlice';
 
 const UserCard = ({user}) => {
-    const {firstName, lastName, photoURL, about} = user;
+    const {_id, firstName, lastName, photoURL, about} = user;
+
+    const dispatch = useDispatch();
+
+    const handleSendRequest = async(status, toUserId) => {
+        try{
+            const res = await axios.post("http://localhost:3000/request/send/" + status + "/" + toUserId,
+                {},
+                {withCredentials: true}
+            )
+            console.log(res);
+            dispatch(removeUserFromFeed(toUserId));
+        }
+        catch(err){
+            console.log("ERROR: ", err.message);
+        }
+    }
+
   return (
     <div className="flex justify-center p-3">
   <div className="card bg-amber-50 w-72 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-xl">
@@ -24,10 +44,12 @@ const UserCard = ({user}) => {
         {about || "This is my devTinder Profile"}
       </p>
       <div className="card-actions mt-3 flex gap-3">
-        <button className="btn btn-success btn-sm px-4 rounded-full shadow-sm hover:scale-105 transition-transform">
+        <button className="btn btn-success btn-sm px-4 rounded-full shadow-sm hover:scale-105 transition-transform"
+        onClick={() => handleSendRequest("interested", _id)}>
           Interested
         </button>
-        <button className="btn btn-error btn-sm px-4 rounded-full shadow-sm hover:scale-105 transition-transform">
+        <button className="btn btn-error btn-sm px-4 rounded-full shadow-sm hover:scale-105 transition-transform"
+        onClick={() => handleSendRequest("ignored", _id)}>
           Ignore
         </button>
       </div>
