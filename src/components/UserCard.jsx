@@ -14,11 +14,10 @@ const UserCard = ({user}) => {
                 {},
                 {withCredentials: true}
             )
-            console.log(res);
             dispatch(removeUserFromFeed(toUserId));
         }
         catch(err){
-            console.log("ERROR: ", err.message);
+            // console.log("ERROR: ", err.message);
         }
     }
 

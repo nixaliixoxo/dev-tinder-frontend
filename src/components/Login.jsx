@@ -6,36 +6,78 @@ import { useNavigate } from "react-router";
 
 const Login = () => {
   const [error, setError] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLoginClick = async () => {
+  const handleSubmit = async () => {
+    if (!emailId || !password || (!isLogin && (!firstName || !lastName))) {
+      setError("All fields are required");
+      return;
+    }
+
     try {
-      const res = await axios.post("http://localhost:3000/login", {
-        emailId,
-        password,
-      }, {withCredentials: true});
+      const url = isLogin
+        ? "http://localhost:3000/login"
+        : "http://localhost:3000/signup";
+
+      const payload = isLogin
+        ? { emailId, password }
+        : { firstName, lastName, emailId, password };
+      const res = await axios.post(url, payload, { withCredentials: true });
       dispatch(addUser(res.data));
-      navigate("/feed");
+      navigate(isLogin? "/feed": "/profile");
     } catch (err) {
-      navigate("/login");
-      setError(err?.response?.data || "something went wrong");
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
     <div className="flex justify-center my-10">
-      <div className="card bg-base-200 w-96 shadow-sm">
+      <div className="card bg-base-200 w-96 shadow-md">
         <div className="card-body">
-          <h2 className="card-title justify-center">LOGIN</h2>
+          <h2 className="card-title justify-center">
+            {isLogin ? "LOGIN" : "SIGNUP"}
+          </h2>
+
+          {/* Only show these fields when signing up */}
+          {!isLogin && (
+            <>
+              <div>
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">First Name</legend>
+                  <input
+                    type="text"
+                    className="input"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </fieldset>
+              </div>
+              <div>
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">Last Name</legend>
+                  <input
+                    type="text"
+                    className="input"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </fieldset>
+              </div>
+            </>
+          )}
 
           <div>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Enter Email</legend>
+              <legend className="fieldset-legend">Email</legend>
               <input
-                type="text"
+                type="email"
                 className="input"
                 value={emailId}
                 onChange={(e) => setEmailId(e.target.value)}
@@ -45,7 +87,7 @@ const Login = () => {
 
           <div>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Enter password</legend>
+              <legend className="fieldset-legend">Password</legend>
               <input
                 type="password"
                 className="input"
@@ -54,12 +96,26 @@ const Login = () => {
               />
             </fieldset>
           </div>
-          <p className="text-red-500">{error}</p>
-          <div className="card-actions justify-center">
-            <button className="btn btn-primary" onClick={handleLoginClick}>
-              Login
+
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <div className="card-actions justify-center mt-4">
+            <button className="btn btn-primary w-full" onClick={handleSubmit}>
+              {isLogin ? "Login" : "Signup"}
             </button>
           </div>
+
+          {/* Toggle Login/Signup */}
+          <p
+            className="cursor-pointer text-center mt-3 text-blue-600"
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setError("");
+            }}
+          >
+            {isLogin ? "New User? Signup Here" : "Existing User? Login Here"}
+          </p>
         </div>
       </div>
     </div>
@@ -67,3 +123,4 @@ const Login = () => {
 };
 
 export default Login;
+

@@ -12,9 +12,9 @@ const Connections = () => {
       const res = await axios.get("http://localhost:3000/user/connections", {
         withCredentials: true,
       })
-      console.log(res.data.data)
       dispatch(addConnections(res.data.data))
     } catch (err) {
+      // console.log("ERROR: ", err.message);
     }
   }
 
